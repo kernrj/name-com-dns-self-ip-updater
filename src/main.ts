@@ -25,16 +25,16 @@ const hostToUpdate = util.getStringEnv('NAME_COM_HOST', hostNameWithoutDomain())
 const username = util.getStringEnvOrDie('NAME_COM_USER_NAME');
 const token = util.getStringEnvOrDie('NAME_COM_TOKEN'); //'3707f0e42417793dfd7d8e7c40a26f1100156e87';
 const nameComApiEndpoint = util.getStringEnv('NAME_COM_ENDPOINT', 'api.name.com');
-const ttl = util.getNumericEnv('NAME_COM_DNS_TTL', 300);
+const dnsRecordTtl = util.getNumericEnv('NAME_COM_DNS_TTL', 300);
 
 const maxBodySize = 1024 * 1024;
-const updateIpAfterIntervalMs = util.getNumericEnv('NAME_COM_DNS_UPDATE_INTERVAL_MS', 600000);
+const updateIpAfterIntervalMs = 1000 * util.getNumericEnv('NAME_COM_DNS_UPDATE_INTERVAL', 600);
 
 const hardExitAfterSignalCount: number = 3;
 let exitSignalCount: number = 0;
 
 let updateInterval: NodeJS.Timeout;
-let nameComSelfUpdater = new NameComSelfIpUpdater();
+let nameComSelfUpdater = new NameComSelfIpUpdater(nameComApiEndpoint, dnsRecordTtl);
 
 process.on('SIGTERM', stopAndExit);
 process.on('SIGINT', stopAndExit);

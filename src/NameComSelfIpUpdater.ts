@@ -21,16 +21,18 @@ import {getLogger} from './Logger';
 import util = require('./util');
 
 const log = getLogger('name.com self-ip updater');
-const nameComApiEndpoint = 'api.name.com';
-const ttl = 300;
 const maxBodySize = 1024 * 1024;
-const updateIpAfterIntervalMs = 600000;
-
-let updateInterval: NodeJS.Timeout;
 
 export class NameComSelfIpUpdater {
   private lastIpv4Address: string;
   private lastIpv6Address: string;
+  private readonly nameComEndpoint: string;
+  private readonly dnsRecordTtl: number;
+
+  constructor(nameComEndpoint: string, dnsRecordTtl: number) {
+    this.nameComEndpoint = util.requireNonEmptyString(nameComEndpoint, 'nameComEndPoint');
+    this.dnsRecordTtl = util.requirePositiveInt(dnsRecordTtl, 'dnsRecordTtl');
+  }
 
   private async bareHttpsRequest(options: https.RequestOptions, body?: string): Promise<http.IncomingMessage> {
     return new Promise<http.IncomingMessage>((resolve, reject) => {
@@ -102,7 +104,7 @@ export class NameComSelfIpUpdater {
     const requestOptions: https.RequestOptions = {
       auth: `${username}:${token}`,
       method: 'GET',
-      hostname: nameComApiEndpoint,
+      hostname: this.nameComEndpoint,
       path: `/v4/domains/${domain}/records`,
     };
 
@@ -148,9 +150,9 @@ export class NameComSelfIpUpdater {
       log.i('Public IPv4 address has not changed. Not updating name.com');
     } else {
       if (util.isSet(ipv4AddressId)) {
-        await this.updateRecord(username, token, ipv4AddressId, host, domain, 'A', currentIpv4Address, ttl);
+        await this.updateRecord(username, token, ipv4AddressId, host, domain, 'A', currentIpv4Address, this.dnsRecordTtl);
       } else {
-        await this.createRecord(username, token, host, domain, 'A', currentIpv4Address, ttl);
+        await this.createRecord(username, token, host, domain, 'A', currentIpv4Address, this.dnsRecordTtl);
       }
     }
 
@@ -160,9 +162,9 @@ export class NameComSelfIpUpdater {
       log.i('Public IPv6 address has not changed. Not updating name.com');
     } else {
       if (util.isSet(ipv6AddressId)) {
-        await this.updateRecord(username, token, ipv6AddressId, host, domain, 'AAAA', currentIpv6Address, ttl);
+        await this.updateRecord(username, token, ipv6AddressId, host, domain, 'AAAA', currentIpv6Address, this.dnsRecordTtl);
       } else {
-        await this.createRecord(username, token, host, domain, 'AAAA', currentIpv6Address, ttl);
+        await this.createRecord(username, token, host, domain, 'AAAA', currentIpv6Address, this.dnsRecordTtl);
       }
     }
 
@@ -225,7 +227,7 @@ export class NameComSelfIpUpdater {
     const options: https.RequestOptions = {
       auth: `${username}:${token}`,
       method: 'PUT',
-      hostname: nameComApiEndpoint,
+      hostname: this.nameComEndpoint,
       path: `/v4/domains/${domain}/records/${recordId}`,
       headers: {
         'Content-Type': 'application/json',
@@ -263,7 +265,7 @@ export class NameComSelfIpUpdater {
     const options: https.RequestOptions = {
       auth: `${username}:${token}`,
       method: 'POST',
-      hostname: nameComApiEndpoint,
+      hostname: this.nameComEndpoint,
       path: `/v4/domains/${domain}/records`,
       headers: {
         'Content-Type': 'application/json',
