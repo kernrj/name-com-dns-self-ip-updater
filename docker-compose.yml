@@ -1,0 +1,18 @@
+version: '3.7'
+
+# NOTE: Create a name.com API token (do not use your password.
+# See here for more info: https://www.name.com/support/articles/360007597874-signing-up-for-api-access
+
+# This example updates the IP addresses (IPv4 and IPv6) of example-host.example.com to your current addresses.
+# If the DNS entries do not exist, they are created.
+
+services:
+  dns-updater:
+    image: kernrj/name-com-dns-self-ip-updater
+    restart: always
+    init: true
+    environment:
+      - NAME_COM_HOST=example-host
+      - NAME_COM_DOMAIN=example.com
+      - NAME_COM_USER_NAME=<your name.com username>
+      - NAME_COM_TOKEN=<your name.com API token (not your password)>
