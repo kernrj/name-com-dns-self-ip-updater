@@ -11,6 +11,7 @@ services:
     image: kernrj/name-com-dns-self-ip-updater
     restart: always
     init: true
+    network_mode: host
     environment:
       - NAME_COM_HOST=example-host
       - NAME_COM_DOMAIN=example.com
