@@ -10,3 +10,5 @@ Optional environment variables:
 - NAME_COM_ENDPOINT - name.com API endpoint to use. Default: api.name.com
 - NAME_COM_DNS_TTL - TTL (in seconds) to use for DNS entries. Default: 300
 - NAME_COM_DNS_UPDATE_INTERVAL - How often (in seconds) to update your IP addresses. Default 600 (10 minutes).
+
+To get IPv6 working with Docker, use host networking.
