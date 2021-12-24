@@ -127,9 +127,9 @@ export class NameComSelfIpUpdater {
     let ipv6AddressId: number;
 
     records.forEach((record: any) => {
-      if (record.type === 'A' && util.notSet(ipv4AddressId)) {
+      if (record.type === 'A' && util.notSet(ipv4AddressId) && record.host === host) {
         ipv4AddressId = record.id;
-      } else if (record.type === 'AAAA' && util.notSet(ipv6AddressId)) {
+      } else if (record.type === 'AAAA' && util.notSet(ipv6AddressId) && record.host === host) {
         ipv6AddressId = record.id;
       }
     });
