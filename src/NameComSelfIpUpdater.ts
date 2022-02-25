@@ -147,7 +147,7 @@ export class NameComSelfIpUpdater {
     if (util.notSet(currentIpv4Address)) {
       log.i('Could not get public IPv4 address. Not updating.');
     } else if (v4IsTheSame) {
-      log.i('Public IPv4 address has not changed. Not updating name.com');
+      log.i(`Public IPv4 address [${currentIpv4Address}] has not changed. Not updating name.com`);
     } else {
       if (util.isSet(ipv4AddressId)) {
         await this.updateRecord(username, token, ipv4AddressId, host, domain, 'A', currentIpv4Address, this.dnsRecordTtl);
@@ -159,7 +159,7 @@ export class NameComSelfIpUpdater {
     if (util.notSet(currentIpv6Address)) {
       log.i('Could not get public IPv6 address. Not updating.');
     } else if (v6IsTheSame) {
-      log.i('Public IPv6 address has not changed. Not updating name.com');
+      log.i(`Public IPv6 address [${currentIpv6Address}] has not changed. Not updating name.com`);
     } else {
       if (util.isSet(ipv6AddressId)) {
         await this.updateRecord(username, token, ipv6AddressId, host, domain, 'AAAA', currentIpv6Address, this.dnsRecordTtl);
@@ -178,7 +178,6 @@ export class NameComSelfIpUpdater {
                                                 hostname: 'v4.ident.me',
                                                 path: '/',
                                                 method: 'GET',
-
                                               });
 
       if (response.statusCode !== 200) {

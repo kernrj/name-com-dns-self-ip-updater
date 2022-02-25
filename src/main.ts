@@ -27,7 +27,6 @@ const token = util.getStringEnvOrDie('NAME_COM_TOKEN'); //'3707f0e42417793dfd7d8
 const nameComApiEndpoint = util.getStringEnv('NAME_COM_ENDPOINT', 'api.name.com');
 const dnsRecordTtl = util.getNumericEnv('NAME_COM_DNS_TTL', 300);
 
-const maxBodySize = 1024 * 1024;
 const updateIpAfterIntervalMs = 1000 * util.getNumericEnv('NAME_COM_DNS_UPDATE_INTERVAL', 600);
 
 const hardExitAfterSignalCount: number = 3;

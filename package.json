@@ -1,6 +1,6 @@
 {
-  "name": "Impenant",
-  "version": "1.0.1",
+  "name": "name-dns-updater",
+  "version": "1.0.3",
   "description": "",
   "main": "compiled-js/main.js",
   "types": "src/main.ts",
